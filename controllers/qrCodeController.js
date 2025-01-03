@@ -13,7 +13,7 @@ const authenticateUser = (req, res, next) => {
 };
 
 const generateQRCodeData = (userId) => {
-    const serverUrl = 'http://192.168.231.121:5000'; // Replace with your actual local IP address and port
+    const serverUrl = 'http://172.19.3.121:5000'; // Replace with your actual local IP address and port
     return `${serverUrl}/api/getUserCardData/${userId}`;
 };
 
