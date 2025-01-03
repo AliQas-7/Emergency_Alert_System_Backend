@@ -15,7 +15,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const port = process.env.PORT || 8080; // Ensure you use the PORT environment variable
+const port = process.env.PORT || 5000; // Ensure you use the PORT environment variable
 
 const corsOptions = {
   origin: '*', // Allow all origins for testing
