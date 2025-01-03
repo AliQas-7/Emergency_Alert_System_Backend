@@ -14,7 +14,6 @@ const serviceAccount = {
   client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-2ohqe%40first-project-3c315.iam.gserviceaccount.com",
   universe_domain: 'googleapis.com'
 };
-console.log('FIREBASE_PRIVATE_KEY:', process.env.FIREBASE_PRIVATE_KEY);
 
 
 // Initialize Firebase Admin SDK
