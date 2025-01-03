@@ -57,15 +57,20 @@ const syncInterval = 60000; // 60 seconds
 
 const startFirestoreSync = () => {
   setInterval(async () => {
-    const users = await User.find({}); // Fetch users from MongoDB
-    users.forEach(async (user) => {
-      const updatedUser = await syncUserProfile(user.uid); // Sync each user
-      if (updatedUser) {
-        console.log(`Successfully synced user: ${user.uid}`);
+    try {
+      const users = await User.find({}); // Fetch users from MongoDB
+      for (const user of users) {
+        const updatedUser = await syncUserProfile(user.uid); // Sync each user
+        if (updatedUser) {
+          console.log(`Successfully synced user: ${user.uid}`);
+        }
       }
-    });
+    } catch (error) {
+      console.error('Error during Firestore sync:', error);
+    }
   }, syncInterval);
 };
+
 
 // Start syncing all profiles on server start
 syncAllUserProfiles();  // Sync Firestore profiles to MongoDB when the backend starts
