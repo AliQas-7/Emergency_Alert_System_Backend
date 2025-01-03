@@ -5,8 +5,6 @@ const { Client } = require('@googlemaps/google-maps-services-js');
 // Google Cloud project and API details
 const PROJECT_ID = "inspiring-lore-443906-b1"; // Replace with your project ID
 const MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Replace with your Maps API Key
-console.log("Google Maps API Key:", process.env.GOOGLE_MAPS_API_KEY);
-
 
 // Initialize Vertex AI and Google Maps clients
 const vertexAI = new VertexAI({ project: PROJECT_ID, location: 'us-central1' });

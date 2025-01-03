@@ -8,20 +8,19 @@ const isDatabaseConnected = () => {
   return mongoose.connection.readyState === 1; // 1 means connected
 };
 
-// Function to fetch user profile from Firestore
 const fetchUserProfileFromFirestore = async (uid) => {
   try {
     const userDoc = await db.collection('users').doc(uid).get();
-    if (userDoc.exists) {
-      return userDoc.data();
-    } else {
+    if (!userDoc.exists) {
       return null;
     }
+    return userDoc.data();
   } catch (error) {
     console.error(`Error fetching Firestore user profile for UID ${uid}:`, error);
-    throw error;
+    throw new Error('Firestore fetch failed');
   }
 };
+
 
 // Controller function to fetch and store or remove user profile in MongoDB
 const syncUserProfile = async (uid) => {

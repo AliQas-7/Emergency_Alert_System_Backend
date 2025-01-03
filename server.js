@@ -18,9 +18,10 @@ const io = socketIo(server);
 const port = process.env.PORT || 8080; // Ensure you use the PORT environment variable
 
 const corsOptions = {
-  origin: 'http://localhost:3001', // Allow requests from React app
+  origin: '*', // Allow all origins for testing
   optionsSuccessStatus: 200,
 };
+
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit: '10mb' }));
@@ -79,6 +80,8 @@ syncAllUserProfiles();  // Sync Firestore profiles to MongoDB when the backend s
 startFirestoreSync();
 
 // Use server.listen instead of app.listen
-server.listen(port, () => {
+server.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on port ${port}`);
 });
+console.log('Environment variables:', process.env);
+
