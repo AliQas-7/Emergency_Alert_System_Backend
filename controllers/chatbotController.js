@@ -1,13 +1,28 @@
 require('dotenv').config(); // Load environment variables
 const { VertexAI } = require('@google-cloud/vertexai');
 const { Client } = require('@googlemaps/google-maps-services-js');
+const fs = require('fs');
 
 // Google Cloud project and API details
 const PROJECT_ID = "inspiring-lore-443906-b1"; // Replace with your project ID
 const MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Replace with your Maps API Key
 
+// Set up authentication for Google Cloud
+const SERVICE_ACCOUNT_KEY_PATH = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+
+// Write the service account key to a temporary file (if using base64)
+if (process.env.GOOGLE_CREDENTIALS_BASE64) {
+    const decodedKey = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf-8');
+    fs.writeFileSync('/tmp/service-account-key.json', decodedKey);
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = '/tmp/service-account-key.json';
+}
+
 // Initialize Vertex AI and Google Maps clients
-const vertexAI = new VertexAI({ project: PROJECT_ID, location: 'us-central1' });
+const vertexAI = new VertexAI({
+    project: PROJECT_ID,
+    location: 'us-central1',
+});
+
 const mapsClient = new Client();
 
 /**
