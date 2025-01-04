@@ -1,5 +1,6 @@
 // server.js
 require('dotenv').config();
+const fs = require('fs');
 const express = require('express');
 const http = require('http');
 const mongoose = require('mongoose');
