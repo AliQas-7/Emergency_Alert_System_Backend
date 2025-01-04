@@ -15,5 +15,8 @@ COPY . .
 # Expose port 8080
 EXPOSE 5000
 
+ENV GOOGLE_CREDENTIALS_BASE64=${GOOGLE_CREDENTIALS_BASE64}
+
+
 # Set the command to start the application
 CMD ["node", "server.js"]

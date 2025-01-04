@@ -1,11 +1,13 @@
 // server.js
 require('dotenv').config();
 const fs = require('fs');
+const os = require('os');
 const express = require('express');
 const http = require('http');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 const socketIo = require('socket.io');
 const routes = require('./routes/routes'); // Consolidated routes for /api
 const adminRoutes = require('./routes/adminroutes'); // Routes for /api/admin
@@ -15,6 +17,25 @@ const { syncUserProfile, syncAllUserProfiles } = require('./controllers/userCont
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+
+
+// Decode the Base64 key and write it to a temporary file
+const base64Key = process.env.GOOGLE_CREDENTIALS_BASE64;
+if (!base64Key) {
+    throw new Error("Environment variable GOOGLE_CREDENTIALS_BASE64 is not set.");
+}
+
+// Dynamically determine the temporary directory
+const tempDir = os.tmpdir(); // Gets the temporary directory for the system
+const keyFilePath = path.join(tempDir, 'service-account-key.json');
+
+const decodedKey = Buffer.from(base64Key, 'base64').toString('utf-8');
+fs.writeFileSync(keyFilePath, decodedKey, 'utf-8');
+
+// Set the GOOGLE_APPLICATION_CREDENTIALS environment variable to the temporary file path
+process.env.GOOGLE_APPLICATION_CREDENTIALS = keyFilePath;
+
+console.log(`Service account key written to ${keyFilePath}`);
 
 const port = process.env.PORT || 5000; // Ensure you use the PORT environment variable
 

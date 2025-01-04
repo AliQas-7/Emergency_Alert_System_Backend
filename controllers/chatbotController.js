@@ -1,8 +1,6 @@
 require('dotenv').config(); // Load environment variables
-const fetch = require('node-fetch');
 const { VertexAI } = require('@google-cloud/vertexai');
 const { Client } = require('@googlemaps/google-maps-services-js');
-global.Headers = fetch.Headers;
 
 // Google Cloud project and API details
 const PROJECT_ID = "inspiring-lore-443906-b1"; // Replace with your project ID
