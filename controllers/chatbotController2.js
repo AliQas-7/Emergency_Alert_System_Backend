@@ -3,11 +3,6 @@
 // const { Client } = require('@googlemaps/google-maps-services-js');
 
 
-// // gcloud auth activate-service-account --key-file="D:\My Work\React Native\backend\service-account-key.json" 
-// // Google Cloud project and API details
-// const PROJECT_ID = "inspiring-lore-443906-b1"; // Replace with your project ID
-// const MAPS_API_KEY = "AIzaSyDFJEvaACmemBBmfa8RprG8Ojf8YlbEdAs"; // Replace with your Maps API Key
-// console.log('GOOGLE_APPLICATION_CREDENTIALS:', process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
 // // Initialize Vertex AI and Google Maps clients
 // const vertexAI = new VertexAI({ project: PROJECT_ID, location: 'us-central1' });
