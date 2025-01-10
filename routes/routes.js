@@ -8,7 +8,7 @@ const authenticateUser = require('../middlewares/firebaseAuth');
 const userController = require('../controllers/userController');
 const qrCodeController = require('../controllers/qrCodeController');
 const weatherController = require('../controllers/WeatherController');
-const chatcontroller = require('../controllers/chatbotController');
+// const chatcontroller = require('../controllers/chatbotController');
 //const nearbyServicesController = require('../controllers/nearbyServicesController'); // Import nearby services controller
 
 // SOS routes
@@ -59,7 +59,7 @@ router.get('/getUserCardData/:uid', (req, res, next) => {
 }); // No authentication needed here
 
 router.get('/weather-updates', weatherController.getWeatherUpdates);
-router.post("/get-help", chatcontroller.getEmergencyResponse);
+// router.post("/get-help", chatcontroller.getEmergencyResponse);
 
 
 // Nearby services route
