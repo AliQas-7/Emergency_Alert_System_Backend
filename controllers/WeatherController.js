@@ -47,7 +47,7 @@ async function fetchWeatherData(lat, lon) {
         params: {
           key: WEATHER_API_KEY,
           q: query,
-          days: 5,
+          days: 3,
           aqi: 'yes',
           alerts: 'yes'
         }
