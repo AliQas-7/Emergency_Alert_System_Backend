@@ -2,7 +2,7 @@ const { Expo } = require('expo-server-sdk');
 const axios = require('axios');
 const expo = new Expo();
 
-const WEATHER_API_KEY = process.env.WEATHER_API_KEY;;
+const WEATHER_API = process.env.WEATHER_API_KEY;;
 
 // Your existing sendPushNotification function
 async function sendPushNotification(expoPushToken, message, batteryStatus, location, emergencyType, acknowledge = false) {
@@ -45,7 +45,7 @@ async function fetchWeatherData(lat, lon) {
       `http://api.weatherapi.com/v1/forecast.json`,
       {
         params: {
-          key: WEATHER_API_KEY,
+          key: WEATHER_API,
           q: query,
           days: 3,
           aqi: 'yes',

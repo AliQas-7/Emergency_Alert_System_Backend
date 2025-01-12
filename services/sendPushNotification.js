@@ -13,7 +13,8 @@ async function sendPushNotification(expoPushToken, message, batteryStatus, locat
       batteryStatus: batteryStatus,
       location: location,
       emergencyType: emergencyType,
-      acknowledge: acknowledge
+      acknowledge: acknowledge,
+      screen: "home"
     },
   }];
 
@@ -42,7 +43,8 @@ async function sendAcknowledgePushNotification(expoPushToken, message) {
     body: message,
     data: { 
       message: message,
-      acknowledge: true
+      acknowledge: true,
+      screen: "home"
     },
   }];
 

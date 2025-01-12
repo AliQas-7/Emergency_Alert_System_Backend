@@ -193,7 +193,12 @@ exports.sendSOSToAllCircles = async (req, res) => {
 };
 
 exports.acknowledgeSOS = async (req, res) => {
-  const { sosId, contactId } = req.body;
+  const { sosId, contactId, circleId } = req.body;
+
+  // Check if circleId is provided
+  if (!circleId) {
+    return res.status(400).json({ message: 'Circle ID is required.' });
+  }
 
   try {
     // Find the SOS by ID
@@ -201,6 +206,12 @@ exports.acknowledgeSOS = async (req, res) => {
 
     if (!sos) {
       return res.status(404).json({ message: 'SOS not found' });
+    }
+
+    // Ensure the circleId is associated with the SOS
+    const circle = sos.circles.find(c => c.circleId.toString() === circleId);
+    if (!circle) {
+      return res.status(404).json({ message: 'Circle ID not associated with this SOS' });
     }
 
     // Find the contact within the SOS contacts
@@ -245,51 +256,60 @@ exports.acknowledgeSOS = async (req, res) => {
   }
 };
 
+
 exports.getSOS = async (req, res) => {
+  const { circleId } = req.query;
+
+  if (!circleId) {
+    return res.status(400).json({ message: 'Circle ID is required.' });
+  }
+
+  console.log(`Fetching SOS for Circle ID: ${circleId}`); // Log the requested circleId
+
   try {
-    // Get the current time and subtract 24 hours to set the time range
     const twentyFourHoursAgo = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
 
-    // Fetch only SOS entries created in the last 24 hours
-    const sosRequests = await SOS.find({
-      createdAt: { $gte: twentyFourHoursAgo },
-    }).populate('sender', 'name batteryStatus userId'); // Populating 'sender' to include 'userId' along with 'name' and 'batteryStatus'
+    const query = {
+      createdAt: { $gte: twentyFourHoursAgo }, // Only fetch SOS from the last 24 hours
+      'circles.circleId': circleId, // Ensure the query is strict about circleId
+    };
+
+    const sosRequests = await SOS.find(query)
+      .populate('sender', 'name batteryStatus userId') // Populate sender information
+      .populate('contacts.contactId', 'name'); // Populate contacts (if needed)
 
     if (!sosRequests || sosRequests.length === 0) {
-      return res.status(404).json({ message: 'No active SOS found within the last 24 hours.' });
+      return res.status(404).json({ message: 'No SOS found for this circle in the last 24 hours.' });
     }
 
-    // Format the SOS response to include required fields, including the SOS ID and userId
-    const formattedSOS = sosRequests.map((sos) => {
-      return {
-        id: sos._id, // Include the SOS ID
-        sender: {
-          name: sos.sender.name,
-          batteryStatus: sos.sender.batteryStatus,
-          userId: sos.sender.userId, // Include the userId
-        },
-        sosDetails: {
-          emergencyType: sos.emergencyType,
-          message: sos.message,
-          userLocation: sos.userLocation?.address || 'Unknown location',
-          createdAt: new Date(sos.createdAt).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-          }), // Format to show only the time
-        },
-        contacts: sos.contacts.map((contact) => ({
-          contactId: contact.contactId,
-          name: contact.name,
-          acknowledged: contact.acknowledged,
-        })),
-        // Extract circle names from sos.circles array
-        circles: sos.circles.map((circle) => ({
-          name: circle.circleName,
-        })),
-      };
-    });
+    const formattedSOS = sosRequests.map((sos) => ({
+      id: sos._id,
+      sender: {
+        name: sos.sender.name,
+        batteryStatus: sos.sender.batteryStatus,
+        userId: sos.sender.userId,
+      },
+      sosDetails: {
+        emergencyType: sos.emergencyType,
+        message: sos.message,
+        userLocation: sos.userLocation?.address || 'Unknown location',
+        createdAt: new Date(sos.createdAt).toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+      },
+      contacts: sos.contacts.map((contact) => ({
+        contactId: contact.contactId,
+        name: contact.name,
+        acknowledged: contact.acknowledged,
+      })),
+      circles: sos.circles.map((circle) => ({
+        circleId: circle.circleId, // Ensure circleId is returned for each circle
+        name: circle.circleName,
+      })),
+    }));
 
-    res.status(200).json(formattedSOS);
+    res.status(200).json(formattedSOS); // Return formatted SOS data
   } catch (error) {
     console.error('Error retrieving SOS:', error);
     res.status(500).json({ message: 'Failed to retrieve SOS.' });
